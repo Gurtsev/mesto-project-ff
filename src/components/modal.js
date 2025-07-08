@@ -6,20 +6,19 @@ export const setModalWindowEventListeners = (modalWindow) => {
 
     // Добавляем обработчик события на кнопку закрытия
     const closeCross = modalWindow.querySelector('.popup__close');
-    closeCross.addEventListener('click', () => {closePopup(modalWindow);});
+    closeCross.addEventListener('click', () => {closePopup(modalWindow);
+
+    });
 
     //  Обработчик события для оверлея
     modalWindow.addEventListener('click', (event) => { 
         if (!event.target.classList.contains(".popup__content")) {
             closePopup(event.target);
-        }
+        }   
     });
 };
 
-function openPopup(popup, beforeFunction) {
-    if (beforeFunction !== null) {
-        beforeFunction();
-    }
+function openPopup(popup) {
     popup.classList.add("popup_is-opened");
     document.addEventListener("keydown", handleEscClose);
 }
@@ -27,11 +26,24 @@ function openPopup(popup, beforeFunction) {
 function closePopup(popup) {
     popup.classList.remove("popup_is-opened");
     document.removeEventListener("keydown", handleEscClose);
-}
-
-function handleEscClose(event) {
-    if (event.key === "Escape") {
-        const openedPopup = document.querySelector(".popup_is-opened");
-        if (openedPopup) closePopup(openedPopup);
+    const form = popup.querySelector('.popup__form');
+    if (form) {
+        form.reset();
     }
 }
+
+function handleEscClose(evt) {
+    if (evt.key === "Escape") {
+            
+        const openedPopup = document.querySelector(".popup_is-opened");
+
+        if (openedPopup)  {
+            closePopup(openedPopup);
+        }
+         
+    }
+}
+
+
+
+

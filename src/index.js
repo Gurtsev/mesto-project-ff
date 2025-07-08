@@ -1,9 +1,9 @@
 import '../src/pages/index.css';
 import { initialCards } from "../src/components/cards.js";
 import { closePopup, openPopup, setModalWindowEventListeners } from "../src/components/modal.js";
-import { createCard } from "../src/components/card.js";
+import { createCard, likeCard, deleteCard } from "../src/components/card.js";
 
-// Переменные для рдактирования профиля
+// Переменные для редактирования профиля
 const formEditProfile = document.querySelector('[name="edit-profile"]')
 const nameInput = formEditProfile.querySelector('.popup__input_type_name');
 const jobInput = formEditProfile.querySelector('.popup__input_type_description');
@@ -34,7 +34,7 @@ addButton.addEventListener('click', () => openPopup(addPopup, null));
 
 const editButton =  document.querySelector('.profile__edit-button');
 const editPopup =   document.querySelector('.popup_type_edit');
-editButton.addEventListener('click', () => openPopup(editPopup, beforeEditPopupOpened));
+editButton.addEventListener('click', () => openPopup(editPopup, openEditPopup));
 
 formNewPlace.addEventListener('submit', handleNewPlaceFormSubmit); 
 
@@ -43,9 +43,10 @@ popUps.forEach(setModalWindowEventListeners);
 
 
 
-function beforeEditPopupOpened() {
+function openEditPopup() {
     nameInput.value = profileTitle.textContent;
     jobInput.value = profileDescription.textContent;
+    openPopup(editPopup);
 }
 
 function handleEditFormSubmit(evt) {
@@ -93,11 +94,8 @@ function renderCard(item, method = "prepend") {
     );
 }
 
-function likeCard (likeButton) {
-    likeButton.classList.toggle("card__like-button_is-active");
-}
 
-function deleteCard(delButton) {
-    const listItem = delButton.closest('.card');
-    listItem.remove()    
-}
+
+
+
+
