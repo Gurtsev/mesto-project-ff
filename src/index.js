@@ -1,53 +1,103 @@
 import '../src/pages/index.css';
+import { initialCards } from "../src/components/cards.js";
+import { closePopup, openPopup, setModalWindowEventListeners } from "../src/components/modal.js";
+import { createCard } from "../src/components/card.js";
 
-const arkhyzImage = new URL("./images/card_1.jpg", import.meta.url);
-const сhelyabinskRegionImage = new URL("./images/card_2.jpg", import.meta.url);
-const ivanovoImage = new URL("./images/card_3.jpg", import.meta.url);
+// Переменные для рдактирования профиля
+const formEditProfile = document.querySelector('[name="edit-profile"]')
+const nameInput = formEditProfile.querySelector('.popup__input_type_name');
+const jobInput = formEditProfile.querySelector('.popup__input_type_description');
+
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
+
+// Расположение
+const formNewPlace = document.querySelector('[name="new-place"]')
+const cardNameInput = formNewPlace.querySelector('.popup__input_type_card-name');
+const urlInput = formNewPlace.querySelector('.popup__input_type_url');
+
+const imagePopup =   document.querySelector('.popup_type_image');
+const popupImage = imagePopup.querySelector('.popup__image');
+const popupCaption = imagePopup.querySelector('.popup__caption');
+
+const placesList = document.querySelector('.places__list');
 
 
-const initialCards = [
-    {
-      name: "Архыз",
-      link: arkhyzImage,
-    },
-    {
-      name: "Челябинская область",
-      link: сhelyabinskRegionImage,
-    },
-    {
-      name: "Иваново",
-      link: ivanovoImage,
-    },
-];
-
-const cardTemplate = document.querySelector('#card-template').content;
-const placesCard = document.querySelector('.places__list'); 
-
-const createCard = (card, deleteCard) => { 
-  
-  const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
-  const cardImage = cardElement.querySelector('.card__image');
-  const cardTitle = cardElement.querySelector('.card__title');
-  const cardDelete = cardElement.querySelector('.card__delete-button');
-  
-  cardImage.src = card.link;
-  cardImage.alt = card.name;
-  cardTitle.textContent = card.name;
-
-  cardDelete.addEventListener('click', () => {
-      deleteCard(cardElement);
-  });
-  
-  return cardElement;
-}
-
- const removeCard = (cardElement) => {
-  cardElement.remove();
-}
-
-initialCards.forEach((item) => {
-  const card = createCard(item, removeCard);
-  placesCard.append(card);
+//  Показать все карты
+initialCards.forEach(function (cardInit) {
+    renderCard(cardInit, "append");
 });
 
+const addButton =  document.querySelector('.profile__add-button');
+const addPopup =   document.querySelector('.popup_type_new-card');
+addButton.addEventListener('click', () => openPopup(addPopup, null));
 
+const editButton =  document.querySelector('.profile__edit-button');
+const editPopup =   document.querySelector('.popup_type_edit');
+editButton.addEventListener('click', () => openPopup(editPopup, beforeEditPopupOpened));
+
+formNewPlace.addEventListener('submit', handleNewPlaceFormSubmit); 
+
+const popUps = document.querySelectorAll(".popup");
+popUps.forEach(setModalWindowEventListeners);
+
+
+
+function beforeEditPopupOpened() {
+    nameInput.value = profileTitle.textContent;
+    jobInput.value = profileDescription.textContent;
+}
+
+function handleEditFormSubmit(evt) {
+    evt.preventDefault();
+    profileTitle.textContent = nameInput.value;
+    profileDescription.textContent = jobInput.value; 
+    closePopup(editPopup);
+}
+
+formEditProfile.addEventListener('submit', handleEditFormSubmit); 
+
+function openCardPopup( title, link) {
+    popupImage.src = link;
+    popupImage.alt = title;
+    popupCaption.textContent = title;
+
+    openPopup(imagePopup, null);
+}
+
+
+// Функция добавления новой карты
+function handleNewPlaceFormSubmit(evt) {
+    evt.preventDefault();
+
+    let newCard = {};
+    newCard.name = cardNameInput.value;
+    newCard.link =  urlInput.value
+    renderCard(newCard);
+
+    formNewPlace.reset();
+
+    closePopup(addPopup);
+}
+
+function renderCard(item, method = "prepend") {
+    placesList[ method ](
+        createCard(
+            {
+                cardInit: item,
+                deleteFunction : deleteCard,
+                onCardClickFunction: openCardPopup,
+                likeFunction: likeCard
+            }
+        )
+    );
+}
+
+function likeCard (likeButton) {
+    likeButton.classList.toggle("card__like-button_is-active");
+}
+
+function deleteCard(delButton) {
+    const listItem = delButton.closest('.card');
+    listItem.remove()    
+}
