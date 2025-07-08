@@ -26,24 +26,16 @@ function openPopup(popup) {
 function closePopup(popup) {
     popup.classList.remove("popup_is-opened");
     document.removeEventListener("keydown", handleEscClose);
-    const form = popup.querySelector('.popup__form');
-    if (form) {
-        form.reset();
-    }
 }
 
 function handleEscClose(evt) {
-    if (evt.key === "Escape") {
-            
+    if (evt.key === "Escape") { 
         const openedPopup = document.querySelector(".popup_is-opened");
-
         if (openedPopup)  {
             closePopup(openedPopup);
         }
-         
     }
 }
-
 
 
 
