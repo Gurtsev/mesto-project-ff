@@ -1,6 +1,5 @@
 import {putCardLike, deleteCardLike, deleteCard} from "./api";
 
-// @todo: Функция создания карточки
 export function createCard(cards, onDelete, openPopupImg, putLike, userId) {
     const cardTmp = document.querySelector('#card-template').content;
     const card = cardTmp.querySelector('.card').cloneNode(true);
@@ -36,7 +35,6 @@ export function createCard(cards, onDelete, openPopupImg, putLike, userId) {
     return card;
 };
 
-// @todo: Функция удаления карточки
 export function onDelete(card, cardId) {
     deleteCard(cardId)
         .then(() => {
@@ -47,7 +45,6 @@ export function onDelete(card, cardId) {
         });
 }
 
-// @todo: Функция лайка
 export function putLike(counter, button, cards) {
     if (button.classList.contains('card__like-button_is-active')) {
         deleteCardLike(cards._id)
