@@ -1,41 +1,28 @@
-export {closePopup, openPopup};
+const escKeyHandler = ((evt) => {
+    if(evt.key === 'Escape') {
+        const popup = document.querySelector('.popup_is-opened');
+        closeModal(popup);
+    }
+});
 
-export const setModalWindowEventListeners = (modalWindow) => {
-    // Добавляем анимацию модальному окну 
-    modalWindow.classList.add("popup_is-animated");
-
-    // Добавляем обработчик события на кнопку закрытия
-    const closeCross = modalWindow.querySelector('.popup__close');
-    closeCross.addEventListener('click', () => {closePopup(modalWindow);
-
-    });
-
-    //  Обработчик события для оверлея
-    modalWindow.addEventListener('click', (event) => { 
-        if (!event.target.classList.contains(".popup__content")) {
-            closePopup(event.target);
-        }   
-    });
+export const openModal = (modal) => {
+    modal.classList.add('popup_is-opened');
+    document.addEventListener('keydown', escKeyHandler);
 };
 
-function openPopup(popup) {
-    popup.classList.add("popup_is-opened");
-    document.addEventListener("keydown", handleEscClose);
+export const closeModal= (modal) => {
+    modal.classList.remove('popup_is-opened')
+    document.removeEventListener('keydown', escKeyHandler);
+};
+
+export const handleClose = (el) => {
+    const btnClose = el.querySelector('.popup__close');
+    btnClose.addEventListener('click', () => {
+        closeModal(el);
+    });
+    el.addEventListener('mousedown', (evt) => {
+        if (evt.target.classList.contains('popup')) {
+            closeModal(el);
+        };
+    });
 }
-
-function closePopup(popup) {
-    popup.classList.remove("popup_is-opened");
-    document.removeEventListener("keydown", handleEscClose);
-}
-
-function handleEscClose(evt) {
-    if (evt.key === "Escape") { 
-        const openedPopup = document.querySelector(".popup_is-opened");
-        if (openedPopup)  {
-            closePopup(openedPopup);
-        }
-    }
-}
-
-
-
