@@ -1,5 +1,6 @@
 import {putCardLike, deleteCardLike, deleteCard} from "./api";
 
+
 export function createCard(cards, onDelete, openPopupImg, putLike, userId) {
     const cardTmp = document.querySelector('#card-template').content;
     const card = cardTmp.querySelector('.card').cloneNode(true);
@@ -46,23 +47,12 @@ export function onDelete(card, cardId) {
 }
 
 export function putLike(counter, button, cards) {
-    if (button.classList.contains('card__like-button_is-active')) {
-        deleteCardLike(cards._id)
+const isLiked = button.classList.contains('card__like-button_is-active');
+const likeMethod = isLiked ? deleteCardLike : putCardLike;
+likeMethod(cards._id) 
         .then((res) => {
-        button.classList.toggle('card__like-button_is-active');
-        counter.textContent = res.likes.length;
+           button.classList.toggle('card__like-button_is-active'); 
+           counter.textContent = res.likes.length; 
         })
-        .catch((err) => {
-          console.error(`Ошибка при удалении лайка: ${err}`);
-        })
-    } else {
-      putCardLike(cards._id)
-      .then((res) => {
-        button.classList.toggle('card__like-button_is-active');
-        counter.textContent = res.likes.length;
-      })
-      .catch((err) => {
-        console.error(`Ошибка при постановке лайка: ${err}`);
-      })
-    }
+.catch(err => console.log(`Ошибка при ${ isLiked ? "удалении" : "постановке"} лайка: ${err}`));
 };
